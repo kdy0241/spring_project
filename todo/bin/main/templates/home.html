@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>홈화면</title>
+</head>
+<body>
+	<h1>할 일 목록</h1>
+	<form action="/" method="get">
+		<label for="search_text">내용 : </label>
+		<input type="text" id="search_text" name="search_text"
+		th:value="${searchDto.search_text}">
+		<input type="submit" value="검색">
+	</form>
+	<br>
+	<table border="1">
+		<thead>
+			<tr>
+				<th>완료</th>
+				<th>번호</th>
+				<th>내용</th>
+				<th>삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:if="${#lists.isEmpty(resultList)}">
+				<td colspan="4">조회된 데이터가 없습니다</td>
+			</tr>
+			<tr th:if="${!#lists.isEmpty(resultList)}"
+				th:each="todo, todoStatus : ${resultList}">
+				<td>
+					<input type="checkbox"
+					th:checked="${todo.flag == 'Y'}"
+					th:value="${todo.flag}"
+					th:onchange="|javascript:todoFlagUpdate('${todo.no}')|">
+				</td>
+				<td th:text="${(pageDto.nowPage-1)*(pageDto.numPerPage)+todoStatus.count}">번호</td>
+				<td th:text="${todo.content}">연차 결재 올리기</td>
+				<td><input type="button" value="삭제"
+					th:onclick="|javascript:todoDelete('${todo.no}')|"></td>
+			</tr>
+		</tbody>
+	</table>
+	<div th:if="${!#lists.isEmpty(resultList)}">
+		<a th:if="${pageDto.prev}"
+		   th:href="@{/(nowPage=${pageDto.pageBarStart-1},search_text=${searchDto.search_text})}">
+		   &laquo;
+		</a>
+		<span th:each="num : ${#numbers.sequence(pageDto.pageBarStart, pageDto.pageBarEnd)}">
+		<a 
+		   th:text="${num}"
+		   th:href="@{/(nowPage=${num},search_text=${searchDto.search_text})}">
+		   번호
+		</a>
+		</span>
+		<a th:if="${pageDto.next}"
+		   th:href="@{/(nowPage=${pageDto.pageBarEnd+1},search_text=${searchDto.search_text})}">
+		   &raquo;
+		</a>
+	</div>
+	<h1>할 일 추가</h1>
+	<form name="create_todo_form">
+		<input type="text" name="content">
+		<input type="submit" value="추가하기">
+	</form>
+	<script>
+		const todoFlagUpdate = function(todoNo){
+			fetch("/todo/"+todoNo+"/update",{
+				method:"post"
+			})
+			.then(response => response.json())
+			.then(data => {
+				if(data.res_code == '500'){
+					alert(res_msg);
+				}
+			})
+		}
+		
+		const todoDelete = function(todoNo){
+			fetch("/todo/"+todoNo+"/delete",{
+				method:"post"
+			})
+			.then(response => response.json())
+			.then(data => {
+				alert(data.res_msg);
+				if(data.res_code == '200'){
+					location.href="/";
+				}
+			})
+		}
+		
+	
+		const todoCreateFrm = document.create_todo_form;
+		todoCreateFrm.addEventListener("submit",function(e){
+			e.preventDefault();
+			if(todoCreateFrm.content.value == ''){
+				alert('할 일 내용을 반드시 입력하세요');
+			}else{
+				const payload = new FormData(todoCreateFrm);
+				fetch("/todo/create",{
+					method:"post",
+					body : payload
+				})
+				.then(response => response.json())
+				.then(data => {
+					alert(data.res_msg);
+					if(data.res_code == '200'){
+						location.href="/";
+					}
+				});
+				
+			}
+		});
+	</script>
+</body>
+</html>

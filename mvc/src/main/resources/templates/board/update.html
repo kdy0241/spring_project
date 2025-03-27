@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{/include/layout}">
+	<th:block layout:fragment="content">	
+		<link th:href="@{/css/board/create.css}" rel="stylesheet">
+		<section>
+			<div id="section_wrap">
+				<div class="word">
+					<h3>게시글 수정</h3>
+				</div><br>
+				<div class="register_board_form">
+					<form name="update_board_form">	
+						<input type="hidden" name="board_no" th:value="${board.boardNo}">
+						<input type="text" name="board_title" th:value="${board.boardTitle}"> <br>
+						<input type="text" name="board_content" th:value="${board.boardContent}"><br>
+						<input type="hidden" name="board_writer" th:value="${board.member.memberNo}">
+						<div th:if="${!#lists.isEmpty(attachList)}"
+								th:each="attach : ${attachList}">
+								<input type="hidden" name="delete_files" th:value="${attach.attachNo}" disabled>
+								<span th:text="${attach.oriName}">파일명</span>
+								<button type="button" class="btn_close" onclick="changeStatus(this);">삭제</button>								
+						</div>
+						<input type="file" name="files" multiple><br>
+						<input type="submit" value="수정"> 
+					</form>
+				</div>
+			</div>
+		</section>	
+		<script>
+			const changeStatus = function(element){
+				// 1. btn_close 클래스
+				// -> disabled를 false
+				// -> 버튼 글자 : 유지
+				// -> 클래스 : btn_open
+				// -> 파일명 : line-through
+				// 2. btn_open 클래스
+				
+				const bumo = element.parentElement;
+				const child1 = bumo.firstElementChild; // hidden
+				const child2 = child1.nextElementSibling; // span
+				
+				if(element.classList.contains('btn_close')){
+					element.classList.remove('btn_close');
+					element.classList.add('btn_open');
+					element.innerText = '유지';
+					child1.disabled = false;
+					child2.style.textDecoration = 'line-through';
+				} else {
+					element.classList.contains('btn_close');
+					element.classList.remove('btn_close');
+					element.classList.add('btn_open');
+					element.innerText = '삭제';
+					child1.disabled = true;
+					child2.style.textDecoration = 'none';
+				}
+			}	
+		
+		
+			const form = document.update_board_form;
+			form.addEventListener('submit',function(e){
+				e.preventDefault();
+				let vali_check = false;
+				let vali_text='';
+				if(form.board_title.value == ''){
+					vali_text += '제목을 입력하세요.';
+					form.board_title.focus();
+				} else if(form.board_content.value == ''){
+					vali_text += '내용을 입력하세요.';
+					form.board_content.focus();
+				} else{
+					vali_check = true;
+				}
+				
+				if(vali_check == false){
+					alert(vali_text);
+				} else{
+					const payload = new FormData(form);
+					fetch('/board/'+form.board_no.value+"/update",{
+						method:'post',
+						body:payload
+					})
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+						if(data.res_code == 200){
+							location.href='/board';
+						}
+					});
+				}
+				
+			});
+		</script>	
+    </th:block>
+</html>

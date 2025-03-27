@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{/include/layout}">
+	<th:block layout:fragment="content">
+	<style>
+  	.msg-box {
+      	display: flex;
+      	margin: 5px;
+      	padding: 8px 12px;
+      	border-radius: 8px;
+      	max-width: 60%;
+      	word-break:break-word;
+  	}
+  	.msg-left {
+       align-self : flex-start;
+       background-color: lightgray;
+  }
+  	.msg-right {
+       align-self : flex-end;
+       background-color: lightblue;
+  }
+  	#chatBox{
+  	   width:400px; height:500px;
+  	   border: 1px solid #ccc;
+  	   padding:10px;
+  	   overflow-y:auto; 
+  	   display:flex;
+  	   flex-direction:column;
+  	   background-color:#f9f9f9;
+  }
+  	.container{
+  	  display: flex;
+	  flex-direction: column;
+	  align-items: center; 
+	  background: white;
+	  padding: 20px;
+  }
+</style>	
+    <div class="container">
+	    <h1>1:1 채팅</h1>
+	    <input type="hidden" id="roomNo" th:value="${chatRoom.roomNo}">
+	    <span th:text="|보내는 사람 : ${#authentication.principal.member.memberName}|">보내는 사람 : </span>
+	    <input type="hidden" id="senderNo" th:value="${#authentication.principal.member.memberNo}">
+	    <br>
+
+		<th:block th:if="${chatRoom.toMember.memberNo == #authentication.principal.member.memberNo}">
+	    <span th:text="|받는 사람 : ${chatRoom.fromMember.memberName}|">받는 사람 : </span>
+	    <input type="hidden" id="receiverNo" th:value="${chatRoom.fromMember.memberNo}">
+		</th:block>
+		
+		<th:block th:if="${chatRoom.fromMember.memberNo == #authentication.principal.member.memberNo}">
+		<span th:text="|받는 사람 : ${chatRoom.toMember.memberName}|">받는 사람 : </span>
+	    <input type="hidden" id="receiverNo" th:value="${chatRoom.fromMember.memberNo}">		
+		</th:block>
+		<br>
+	    <textarea id="msgContent" placeholder="메시지 입력"></textarea>
+	    <br>
+	    <button onclick="sendMsg();">전송</button>
+	    <div id="chatBox">
+	    	 <div th:if="${!#lists.isEmpty(msgList)}"
+	    	 	  th:each="chatMsg : ${msgList}"
+	    	 	  th:text="${chatMsg.msgContent}"
+	    	 	  class="msg-box"
+	    	 	  th:classappend="${chatMsg.sendMember.memberNo == #authentication.principal.member.memberNo} ? 'msg-right' : 'msg-left'">
+  			 </div>
+	    </div>
+    </div>
+    <script>
+    	let senderNo = document.getElementById("senderNo").value;
+    	let roomNo = document.getElementById("roomNo").value;
+    	// 채팅방 정보X -> 필터링 문제 발생
+    	//let socket = new WebSocket("ws://localhost:8080/ws/chat?senderNo="+senderNo);
+    	
+    	// 연결 시점에 채팅방 정보 전달
+    	let socket = new WebSocket("ws://localhost:8080/ws/chat?senderNo="+senderNo+"&roomNo="+roomNo);
+    	
+    	const sendMsg = function(){
+    		// 채팅방, 받는 사람, 보내는 사람, 메시지
+    		let receiverNo = document.getElementById("receiverNo").value;
+    		let msgContent = document.getElementById("msgContent").value;
+    		
+    		// handleTextMessage(chatWebSocketHandler.java)
+    		socket.send(JSON.stringify({
+    				sender_no:senderNo, room_no:roomNo, receiver_no:receiverNo, msg_content:msgContent
+    		}));
+    		document.getElementById("msgContent").value="";
+    	}
+    	socket.onmessage = function(event){
+    		//document.getElementById("chatBox").innerHTML += "<p>"+event.data+"</p>";
+    		// 자료형을 바꿔주는게 parse임
+    		let msgData = JSON.parse(event.data);
+    		
+    		// 1. 채팅 출력 div에 접근
+    		let chatBox = document.getElementById("chatBox");
+    		// 2. 채팅 하나하나 만들어주기
+    		let msgDiv = document.createElement("div");
+    		msgDiv.classList.add("msg-box");
+    		if(msgData.sender_no == senderNo){
+    			msgDiv.classList.add("msg-right");
+    		} else {
+    			msgDiv.classList.add("msg-left");
+    		}
+    		
+    		// 3. 채팅 출력 div에 채팅 하나씩 넣기
+    		msgDiv.innerHTML = `<div>${msgData.msg_content}</div>`;
+    		chatBox.appendChild(msgDiv);
+    		
+    		// 4. 스크롤 밑으로 내리기
+    		chatBox.scrollTop = chatBox.scrollHeight;
+    		
+    	}
+    
+    </script>
+    </th:block>
+</html>

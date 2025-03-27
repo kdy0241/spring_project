@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<th:block th:fragment="navLayout">
+		<link th:href="@{/css/include/nav.css}" rel="stylesheet">
+		<nav>
+			<div id="nav_wrap">
+				<div class="menu">
+					<ul>
+						<th:block sec:authorize="isAnonymous()">
+							<li>
+								<a th:href="@{/login}">로그인</a>
+							</li>
+							<li>
+								<a th:href="@{/signup}">회원가입</a>
+							</li>
+						</th:block>
+						<th:block sec:authorize="isAuthenticated()">
+							<li>
+								<form th:action="@{/logout}" method="post">
+									<input type="submit" value="로그아웃">
+								</form>
+							</li>
+							<li>
+								<a th:href="@{/board}">게시판</a>
+							</li>
+							<li>
+								<a th:href="@{/member/{memberNo}/update(memberNo=${#authentication.principal.member.memberNo})}">회원 수정</a>
+							</li>
+							<li>
+								<a th:href="@{/chat/list}">채팅하기</a>
+							</li>
+							<li>
+							<!-- ||쓰는 이유는 javascript 코드를 쓰겠다라고 하는것 -->
+								<a th:onclick="|javascript:memberDelete('${#authentication.principal.member.memberNo}')|">회원 탈퇴</a>
+							</li>
+						</th:block>
+					</ul>
+				</div>
+			</div>
+		</nav>
+		<script>
+		/* payload를 쓰는 이유(수정) / 삭제는 필요가 없다 */
+		/* CSRF = 사이트 간 요청 위조 방지를 위한 토큰을 포함 */
+		/* 200(정상응답) => location.href="/" : 홈화면으로 이동*/
+			const memberDelete = function(member_no){
+				if(confirm("회원을 탈퇴하시겠습니까?")){
+					fetch('/member/'+member_no,{
+						method:'delete',
+						headers: {
+				              'header': document.querySelector('meta[name="_csrf_header"]').content,
+				              'X-CSRF-Token': document.querySelector('meta[name="_csrf"]').content
+						},			
+					})
+					/* 파싱해준다. */
+					.then(response => response.json())
+					.then(data => {
+						alert(data.res_msg);
+						if(data.res_code == 200){
+							location.href="/";
+						}
+					});
+				}
+			}
+		</script>
+	</th:block>
+</html>

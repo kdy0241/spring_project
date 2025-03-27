@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{/include/layout}">
+	<th:block layout:fragment="content">	
+		<link th:href="@{/css/board/list.css}" rel="stylesheet">
+		<link th:href="@{/css/include/paging.css}" rel="stylesheet">
+		<script th:src="@{/js/jquery-3.7.1.js}"></script>
+		<section>
+		<div id="section_wrap">
+			<div class="word">
+				<h3>게시글 목록</h3>
+			</div><br>
+			<form action="/board" name="search_board_form" method="get">
+				<div class="sort">
+					<select id="order_type" name="order_type">
+						<option value="1" th:selected="${searchDto.order_type == 1}">최신순</option>
+						<option value="2" th:selected="${searchDto.order_type == 2}">오래된순</option>
+					</select>
+				</div>		
+				<div class="search">
+					<select name="search_type">
+						<option value="1" th:selected="${searchDto.search_type == 1}">제목</option>
+						<option value="2" th:selected="${searchDto.search_type == 2}">내용</option>
+						<option value="3" th:selected="${searchDto.search_type == 3}">제목+내용</option>
+					</select>
+					<input type="text" name="search_text" placeholder="검색어를 입력하세요."
+					th:value="${searchDto.search_text}">
+					<input type="submit" value="검색">
+				</div>
+			</form>	
+			<div class="board_list">
+				<table>
+					<colgroup>
+						<col width="10%">
+						<col width="50%">
+						<col width="20%">
+						<col width="20%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>제목</th>
+							<th>작성자</th>
+							<th>작성일시</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:if="${#lists.isEmpty(boardList)}">
+							<td colspan="4">게시글이 없습니다.</td>
+						</tr>
+						<tr th:if="${!#lists.isEmpty(boardList)}"
+							th:each="board, boardStatus : ${boardList}"
+							th:attr="data-board-no=${board.boardNo}">
+							<td th:text="${(pageDto.nowPage-1)*(pageDto.numPerPage)+boardStatus.count}">번호</td>
+							<td th:text="${board.boardTitle}">제목</td>
+							<td th:text="${board.member.memberName}">작성자</td>
+							<td th:text="${#temporals.format(board.regDate,'yyyy-MM-dd')}">작성일시</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div style="text-align:right; margin-right:110px;padding:5px;">
+			<br>
+			<a style="border:1px solid black;" th:href="@{/board/create}">게시글 등록</a>
+		</div>
+		</section>	
+		<div class="center">
+			<div class="pagination">
+				<a th:if="${pageDto.prev}"
+					th:href="@{/board(nowPage=${pageDto.pageBarStart-1},search_type=${searchDto.search_type},search_text=${searchDto.search_text},order_type=${searchDto.order_type})}">
+					&laquo;
+				</a>
+				<a th:each="num : ${#numbers.sequence(pageDto.pageBarStart,pageDto.pageBarEnd)}"
+					th:text="${num}" class="page-link"
+					th:classappend="${pageDto.nowPage == num} ? 'active' "
+					th:href="@{/board(nowPage=${num},search_type=${searchDto.search_type},search_text=${searchDto.search_text},order_type=${searchDto.order_type})}">
+					번호
+				</a>
+				<a th:if="${pageDto.next}"
+					th:href="@{/board(nowPage=${pageDto.pageBarEnd+1},search_type=${searchDto.search_type},search_text=${searchDto.search_text},order_type=${searchDto.order_type})}">
+					&raquo;
+				</a>
+			</div>
+		</div>
+		<script>
+			document.getElementById('order_type').addEventListener('change',function(e){
+				const orderType = e.target.value;
+				location.href="/board?order_type="+orderType;
+			});
+			$(function(){
+				$('.board_list tbody tr').on('click',function(){
+					const boardNo = $(this).data('board-no');
+					location.href="/board/"+boardNo;
+				})
+			})
+		</script>
+	</th:block>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+	layout:decorate="~{/include/layout}"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<th:block layout:fragment="content">
+		<style>
+			section {
+				margin: 30px 0;
+			}
+			#section_wrap .word {
+				width: 1024px;
+				margin: 0 auto;
+				text-align: center;
+			} 
+		</style>
+    	<section>
+			<div id="section_wrap">
+				<div class="word">
+					<h3>HOME</h3>
+					<th:block sec:authorize="isAuthenticated()">
+						<span sec:authentication="principal.member.memberName"></span>
+						<span>님 환영합니다~</span>
+						<br>
+						<span th:text="|${#authentication.principal.member.memberName} 님 환영합니다~|"></span>						
+					</th:block>
+				</div>
+			</div>
+		</section>
+		<h1>WebSocket 테스트</h1>
+		<input type="text" id="msg">
+		<input type="button" value="전송" onclick="sendMsg();">
+		<div id="output">
+		
+		</div>
+		<script>
+			let socket = new WebSocket("ws://localhost:8080/ws/basic");
+			socket.onopen = function(){
+				// 클라이언트 -> 서버 연결합시다!!
+				// 서버의 afterConnectionEstablisheed 메소드
+				console.log("클라이언트 : 연결");
+			}
+			socket.onmessage = function(event){
+				// 클라이언트 -> 서버 메시지 send
+				// 메시지를 서버가 handleTextMessage에서 처리
+				// 서버의 sendMessage 메소드 동작
+				//console.log(event.data);
+				document.getElementById('output').innerHTML += '<p>'+event.data+"</p>";
+			}
+			const sendMsg = function(){
+				let msg = document.getElementById('msg').value;
+				socket.send(msg);
+				document.getElementById('msg').value = "";
+			}
+		</script>
+	</th:block>
+</html>

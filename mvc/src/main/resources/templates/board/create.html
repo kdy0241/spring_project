@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{/include/layout}">
+	<th:block layout:fragment="content">
+		<link th:href="@{/css/board/create.css}" rel="stylesheet">
+		<section>
+			<div id="section_wrap">
+				<div class="word">
+					<h3>게시글 등록</h3>
+				</div><br>
+				<div class="register_board_form">
+					<form action='/board/create' name="create_board_form" method="post" enctype="multipart/form-data">	
+						<input type="text" name="board_title" placeholder="제목을 입력하세요."> <br>
+						<input type="text" name="board_content" placeholder="내용을 입력하세요."><br>
+						<!-- value(데이터베이스에 있는 값을 넣어줘야함) -->
+						<input type="hidden" name="board_writer" value="16">
+						<input type="file" name="files" multiple><br>
+						<input type="submit" value="등록"> 
+					</form>
+				</div>
+			</div>
+		</section>
+		<script>
+			const form = document.create_board_form;
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+				
+				let vali_check = false;
+				let vali_text = "";
+				
+				if(!form.board_title.value){
+					vali_text += "제목을 입력하세요";
+				} else if(!form.board_content.value){
+					vali_text += "내용을 입력하세요";
+				} else{
+					vali_check = true;
+				}
+				
+				if(vali_check == false){
+					alert(vali_text);
+				} else{
+					const payload = new FormData(form);
+					fetch("/board",{
+						method:'post',
+						body:payload
+					})
+					.then(response => response.json())
+					.then(data => {
+						console.log(data);
+					})
+					.catch(error => {
+						console.log(error);
+					})
+				}
+			})
+		</script>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</th:block>
+</html>
