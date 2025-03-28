@@ -1,0 +1,28 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+ <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <title>500에러 발생</title>
+<!--      <script>
+     	// 뒤로가기 방지
+     	history.pushState(null, null, location.href);
+     	window.onpopstate = function(){
+     		history.pushState(null, null, location.href);
+     	};
+     	// 강제 에러 발생
+     	setTimeout(function(){
+     		throw new Error("500 Internal Server Error");
+     	}, 1000);
+     </script> -->
+ </head>
+ 	<style>
+ 		body{text-align:center; font-family: Arial, sans-serif; margin-top:100px;}
+ 		h1{color:crimson;}
+ 		p{font-size:18px;}
+ 		a{text-decoration:none; color:blue;}
+ 	</style>
+ <body>
+ 	<h1>500 Forbidden</h1>
+ 	<p>접근 권한이 없습니다.</p>
+  	<a href="/">홈으로 돌아가기</a>
+ </body>
+ </html>

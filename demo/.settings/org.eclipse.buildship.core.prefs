@@ -9,5 +9,5 @@ java.home=C\:/dev/java/program/jdk-17.0.13+11
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true
-show.console.view=false
-show.executions.view=false
+show.console.view=true
+show.executions.view=true

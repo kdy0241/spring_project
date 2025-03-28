@@ -1,0 +1,29 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+ <head>
+     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+     <title>404 페이지 없음</title>
+<!--      <script>
+        // 뒤로 가기 방지
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.pushState(null, null, location.href);
+        };
+
+        // 강제 에러 발생
+        setTimeout(function() {
+            throw new Error("404 Not Found");
+        }, 1000);
+    </script> -->
+ </head>
+ 	<style>
+ 		body{text-align:center; font-family: Arial, sans-serif; margin-top:100px;}
+ 		h1{color:crimson;}
+ 		p{font-size:18px;}
+ 		a{text-decoration:none; color:blue;}
+ 	</style>
+ <body>
+ 	<h1>404 Not Found</h1>
+ 	<p>요청하신 페이지를 찾을 수 없습니다.</p>
+  	<a href="/">홈으로 돌아가기</a>
+ </body>
+ </html>

@@ -1,0 +1,77 @@
+@charset "UTF-8";
+section {
+	margin: 30px 0;
+	}
+#section_wrap {
+	width: 1200px;
+	margin: 0 auto;
+	}
+#section_wrap .word {
+	width: 1024px;
+	margin: 0 auto;
+	text-align: center;
+	}
+#section_wrap .board_list {
+	width: 1024px;
+	margin: 0 auto;
+	}
+#section_wrap .board_list table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: .9em;
+	}
+#section_wrap .board_list table thead tr th {
+	border: 1px solid #e1e1e1;
+	padding: 10px 3px;
+	text-align: center;
+	color: #fff;
+	background-color: #a5a5a5;
+	}
+#section_wrap .board_list table thead tr th:nth-child(1) {
+	width: 250px;
+	}
+#section_wrap .board_list table thead tr th:nth-child(2) {
+	width: 120px;
+	}
+#section_wrap .board_list table thead tr th:nth-child(3) {
+	width: 100px;
+	}
+#section_wrap .board_list table thead tr th:nth-child(4) {
+	width: 70px;
+	}
+#section_wrap .board_list table thead tr th:nth-child(5) {
+	width: 110px;
+	}
+#section_wrap .board_list table thead tr th:nth-child(7) {
+	width: 70px;
+	}
+#section_wrap .board_list table tbody tr:nth-child(2n-1) {
+	background-color: #f3f3f3;
+}
+#section_wrap .board_list table tbody tr td {
+	border: 1px solid #e1e1e1;
+	padding: 10px 3px;
+	text-align: center;
+	} 
+.sort{
+	text-align:right;
+	margin-right:100px;
+}
+.search {
+	height: 70px;
+	line-height: 70px;
+	text-align: center;
+}
+.search input[type='text'] {
+	width: 300px;
+	padding: 10px;
+	border: 1px solid #adadad;
+	border-radius: 5px;
+}
+.search input[type='submit'] {
+	width: 80px;
+	padding: 10px;
+	border: 1px solid #adadad;
+	border-radius: 5px;
+	cursor: pointer;
+}	

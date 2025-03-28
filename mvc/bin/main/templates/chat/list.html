@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{/include/layout}">
+	<th:block layout:fragment="content">	
+		<link th:href="@{/css/board/list.css}" rel="stylesheet">
+		<script th:src="@{/js/jquery-3.7.1.js}"></script>
+		<section>
+		<div id="section_wrap">
+			<div class="word">
+				<h3>채팅하기</h3>
+			</div><br>
+			<div class="board_list">
+				<table>
+					<colgroup>
+						<col width="10%">
+						<col width="50%">
+						<col width="20%">
+						<col width="20%">
+					</colgroup>
+					<thead>
+						<tr>
+							<th>번호</th>
+							<th>상대방</th>
+							<th colspan="2">마지막 메시지</th>
+						</tr>
+					</thead>
+					<tbody>						
+						<tr th:if="${#lists.isEmpty(chatRoomList)}">
+							<td colspan="4">채팅 가능한 방이 없습니다.</td>
+						</tr>
+						<tr th:if="${!#lists.isEmpty(chatRoomList)}"
+							th:each="chatRoom : ${chatRoomList}"
+							th:attr="data-room-no=${chatRoom.roomNo}">
+							<td th:text="${chatRoom.roomNo}"></td>
+							
+							<td th:if="${chatRoom.toMember.memberNo == #authentication.principal.member.memberNo}"
+								th:text="${chatRoom.fromMember.memberName}">
+								toMember(초대받은 사람)가 현재 로그인한 사용자인 경우
+								상대방 : fromMember
+							</td>
+							
+							<td th:if="${chatRoom.fromMember.memberNo == #authentication.principal.member.memberNo}"
+								th:text="${chatRoom.toMember.memberName}">
+								fromMember(채팅방 만든 사람)가 현재 로그인한 사용자인 경우
+								상대방 : toMember	
+							</td>
+							
+							<td th:text="${chatRoom.lastMsg}">마지막 메시지</td>
+					    	<td th:text="${#temporals.format(chatRoom.lastDate, 'yy-MM-dd')}">작성일시</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>	
+	<script>
+	// 익명함수(function) - 위에 jQuery 코드가 있어서 쓸수있다.
+		$('.board_list tbody tr').on('click',function(){
+			const roomNo = $(this).data("room-no");
+			location.href="/chat/"+roomNo+"/detail";
+		})
+	
+	</script>
+</th:block>
+</html>
