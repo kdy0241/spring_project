@@ -5,6 +5,81 @@
 <title>홈화면</title>
 </head>
 <body>
+	 <h1>파일 업로드</h1>
+    <form name="create_file_form">
+        <input type="file" name="files" multiple>
+        <input type="submit" value="업로드">
+    </form>
+    
+    <h1>파일 목록</h1>
+    <div id="fileList">
+        <ul>
+            <li th:each="file : ${fileList}">
+                <span th:text="${file.oriName}">파일 이름</span>
+                <button th:onclick="'editFile(' + ${file.attachNo} + ', \'' + ${file.oriName} + '\')'">수정</button>
+                <button th:onclick="'deleteFile(' + ${file.attachNo} + ')'">삭제</button>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        const createFileForm = document.create_file_form;
+        createFileForm.addEventListener('submit', function(e){
+            // 파일 선택 여부 확인
+            const fileInput = createFileForm.querySelector('input[type="file"]');
+            if (fileInput.files.length === 0) {
+                e.preventDefault(); // 폼 제출 방지
+                alert("파일을 선택해주세요."); // 오류 메시지 표시
+                return; // 함수 종료
+            }
+            
+            const createFilePayload = new FormData(createFileForm);
+            fetch("/attach/create", {
+                method: "POST",
+                body: createFilePayload
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.res_msg);
+                if(data.res_code === 200) {
+                    location.reload(); // 페이지 새로고침
+                }
+            });
+        });
+
+        function deleteFile(fileId) {
+            fetch(`/attach/delete/${fileId}`, {
+                method: "DELETE"
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.res_msg);
+                if(data.res_code === 200) {
+                    location.reload(); // 페이지 새로고침
+                }
+            });
+        }
+
+        function editFile(fileId, oriName) {
+            const newFileName = prompt("새로운 파일 이름을 입력하세요:", oriName);
+            if (newFileName) {
+                fetch(`/attach/edit/${fileId}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ newName: newFileName })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.res_msg);
+                    if(data.res_code === 200) {
+                        location.reload(); // 페이지 새로고침
+                    }
+                });
+            }
+        }
+    </script>
 	<h1>할 일 목록</h1>
 	<form action="/" method="get">
 		<label for="search_text">내용 : </label>
@@ -75,7 +150,6 @@
 				}
 			})
 		}
-		
 		const todoDelete = function(todoNo){
 			fetch("/todo/"+todoNo+"/delete",{
 				method:"post"
@@ -88,8 +162,6 @@
 				}
 			})
 		}
-		
-	
 		const todoCreateFrm = document.create_todo_form;
 		todoCreateFrm.addEventListener("submit",function(e){
 			e.preventDefault();
