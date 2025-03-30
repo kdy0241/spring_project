@@ -21,7 +21,22 @@
             </li>
         </ul>
     </div>
-
+    
+<!--     <h1>파일 목록</h1>
+<form action="/attach/list" method="get">
+    <input type="text" name="searchQuery" placeholder="파일 이름으로 검색">
+    <input type="submit" value="검색">
+</form>
+<div id="fileList">
+    <ul>
+        <li th:each="file : ${fileList}">
+            <span th:text="${file.oriName}">파일 이름</span>
+            <button th:onclick="'editFile(' + ${file.attachNo} + ', \'' + ${file.oriName} + '\')'">수정</button>
+            <button th:onclick="'deleteFile(' + ${file.attachNo} + ')'">삭제</button>
+        </li>
+    </ul>
+</div> -->
+    
     <script>
         const createFileForm = document.create_file_form;
         createFileForm.addEventListener('submit', function(e){
