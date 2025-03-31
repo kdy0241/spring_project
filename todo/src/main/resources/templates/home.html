@@ -29,6 +29,9 @@
     					파일명
     				</a>
     			</td>
+<!--     		<td>
+    				<button onclick="deleteFile([[${attach.attachNo}]])">삭제</button>
+				</td> -->
     		</tr>
     	</tbody>
     </table>
@@ -45,12 +48,7 @@
         </ul>
     </div> -->
     
-<!--     <h1>파일 목록</h1>
-<form action="/attach/list" method="get">
-    <input type="text" name="searchQuery" placeholder="파일 이름으로 검색">
-    <input type="submit" value="검색">
-</form>
-<div id="fileList">
+<!-- <div id="fileList">
     <ul>
         <li th:each="file : ${fileList}">
             <span th:text="${file.oriName}">파일 이름</span>
@@ -75,12 +73,28 @@
             .then(response => response.json())
             .then(data => {
                 alert(data.res_msg);
-                if(data.res_code === 200) {
+                if(data.res_code == 200) {
                     location.reload(); // 페이지 새로고침
                 }
             });
         });
-
+        
+        // 삭제 코드 (2025-03-31)
+        function deleteFile(id){
+        	if(!confirm("정말로 삭제하시겠습니까?"))
+        		return;
+        	fetch("/s3/delete/${id}",{
+        		method:'post'
+        	})
+        	.then(response => response.json())
+        	.then(data => {
+        		alert(data.res_msg);
+        		if(data.res_code == '200'){
+        			location.reload();
+        		}
+        	});
+        }
+/* 
         function deleteFile(fileId) {
             fetch(`/attach/delete/${fileId}`, {
                 method: "DELETE"
@@ -112,7 +126,7 @@
                     }
                 });
             }
-        }
+        } */
     </script>
 	<h1>할 일 목록</h1>
 	<form action="/" method="get">

@@ -122,11 +122,14 @@ public class AttachService {
     
     // 모든 첨부파일 조회
     public List<Attach> selectAttachList() {
-    	//Attach attach = attachRepository.findById(attachNo).orElse(null);
     	return attachRepository.findAll();
     	
     }
     
+    // 파일 삭제 기능 추가(2025-03-31)
+    public void deleteAttach(Long id) {
+    	attachRepository.deleteById(id);
+    }
     // 파일 이름 수정
 //    public void editFileName(Long id, String newName) {
 //        Attach attach = attachRepository.findById(id)

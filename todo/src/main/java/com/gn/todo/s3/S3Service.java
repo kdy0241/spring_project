@@ -63,4 +63,16 @@ public class S3Service {
 		}
 		return dto;
 	}
+	
+	
+	// 파일 삭제(2025-03-31)
+	public boolean deleteFile(String fileName) {
+		try {
+			amazonS3.deleteObject(bucket, fileName);
+			return true;
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }
