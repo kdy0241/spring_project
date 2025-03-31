@@ -15,7 +15,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Entity
 @Builder
 @Table(name="attach")
@@ -23,6 +22,7 @@ public class Attach {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="attach_no")
 	private Long attachNo;
 	
 	@Column(name="ori_name")

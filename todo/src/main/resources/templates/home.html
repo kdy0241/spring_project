@@ -5,13 +5,36 @@
 <title>홈화면</title>
 </head>
 <body>
-	 <h1>파일 업로드</h1>
+	 <h1>파일 목록</h1>
     <form name="create_file_form">
         <input type="file" name="files" multiple>
         <input type="submit" value="업로드">
     </form>
+    <br>
+    <table border="1" th:if="${!#lists.isEmpty(attachList)}">
+    	<thead>
+    		<tr>
+    			<th>번호</th>
+    			<th>다운로드</th>
+    		</tr>
+    	</thead>
+    	<tbody>
+    	<!-- attr을 쓰는 이유가 key값을 받기 위해서 쓴다? -->
+    		<tr th:each="attach, attachStatus : ${attachList}"
+    			th:attr="data-attach-no=${attach.attachNo}">
+    			<td th:text="${attachStatus.count}">번호(Status의 count 사용)</td>
+    			<td>
+    				<a th:onclick="|location.href='@{/download/{id}(id=${attach.attachNo})}'|"
+    				    th:text="${attach.oriName}">
+    					파일명
+    				</a>
+    			</td>
+    		</tr>
+    	</tbody>
+    </table>
     
-    <h1>파일 목록</h1>
+    
+<!--     <h1>파일 목록</h1>
     <div id="fileList">
         <ul>
             <li th:each="file : ${fileList}">
@@ -20,7 +43,7 @@
                 <button th:onclick="'deleteFile(' + ${file.attachNo} + ')'">삭제</button>
             </li>
         </ul>
-    </div>
+    </div> -->
     
 <!--     <h1>파일 목록</h1>
 <form action="/attach/list" method="get">
@@ -40,13 +63,9 @@
     <script>
         const createFileForm = document.create_file_form;
         createFileForm.addEventListener('submit', function(e){
+        	e.preventDefault();
+        	console.log("확인");
             // 파일 선택 여부 확인
-            const fileInput = createFileForm.querySelector('input[type="file"]');
-            if (fileInput.files.length === 0) {
-                e.preventDefault(); // 폼 제출 방지
-                alert("파일을 선택해주세요."); // 오류 메시지 표시
-                return; // 함수 종료
-            }
             
             const createFilePayload = new FormData(createFileForm);
             fetch("/attach/create", {
