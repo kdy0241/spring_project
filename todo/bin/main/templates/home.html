@@ -64,11 +64,11 @@
         const createFileForm = document.create_file_form;
         createFileForm.addEventListener('submit', function(e){
         	e.preventDefault();
-        	console.log("확인");
             // 파일 선택 여부 확인
             
             const createFilePayload = new FormData(createFileForm);
-            fetch("/attach/create", {
+            // 바꾸고 service,controller
+            fetch("/s3/upload", {
                 method: "POST",
                 body: createFilePayload
             })
