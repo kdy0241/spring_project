@@ -9,8 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.gn.todo.dto.AttachDto;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,13 @@ public class S3Service {
 	// application-secret.properties
 	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
+	
+	// S3 서비스와 연결하기
+	public S3Object getS3Object(String fileName) {
+		// 파일 객체 정보를 가져옴
+		S3Object s3Object = amazonS3.getObject(new GetObjectRequest(bucket,fileName));
+		return s3Object;
+	}
 	
 	public AttachDto uploadFile(MultipartFile file) {
 		// 메타 데이터 insert를 할 수 있다
@@ -66,13 +75,13 @@ public class S3Service {
 	
 	
 	// 파일 삭제(2025-03-31)
-	public boolean deleteFile(String fileName) {
-		try {
-			amazonS3.deleteObject(bucket, fileName);
-			return true;
-		}catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
+//	public boolean deleteFile(String fileName) {
+//		try {
+//			amazonS3.deleteObject(bucket, fileName);
+//			return true;
+//		}catch(Exception e) {
+//			e.printStackTrace();
+//			return false;
+//		}
+//	}
 }

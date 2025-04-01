@@ -20,17 +20,17 @@
     	</thead>
     	<tbody>
     	<!-- attr을 쓰는 이유가 key값을 받기 위해서 쓴다? -->
-    		<tr th:each="attach, attachStatus : ${attachList}"
-    			th:attr="data-attach-no=${attach.attachNo}">
+    		<tr th:each="attach, attachStatus : ${attachList}">
+    			<!-- th:attr="data-attach-no=${attach.attachNo}"> -->
     			<td th:text="${attachStatus.count}">번호(Status의 count 사용)</td>
     			<td>
-    				<a th:onclick="|location.href='@{/download/{id}(id=${attach.attachNo})}'|"
+    				<a th:onclick="|location.href='@{/s3/download/{id}(id=${attach.attachNo})}'|"
     				    th:text="${attach.oriName}">
     					파일명
     				</a>
     			</td>
-<!--     		<td>
-    				<button onclick="deleteFile([[${attach.attachNo}]])">삭제</button>
+<!--      			<td><input type="button" value="삭제"
+					th:onclick="|javascript:deleteFile('${attach.attachNo}')|">
 				</td> -->
     		</tr>
     	</tbody>
@@ -82,7 +82,7 @@
         // 삭제 코드 (2025-03-31)
         function deleteFile(id){
         	if(!confirm("정말로 삭제하시겠습니까?"))
-        		return;
+				console.log("삭제");
         	fetch("/s3/delete/${id}",{
         		method:'post'
         	})

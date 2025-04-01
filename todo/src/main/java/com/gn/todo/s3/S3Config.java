@@ -25,7 +25,7 @@ public class S3Config {
 	AmazonS3Client amazonS3Client() {
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(accessKey, secretKey);
 		// 다운 캐스팅해서 코드를 써야함
-		return (AmazonS3Client)AmazonS3ClientBuilder.standard()
+		return (AmazonS3Client) AmazonS3ClientBuilder.standard()
 						.withRegion(region)
 						.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
 						.build();
