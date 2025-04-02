@@ -39,7 +39,7 @@ public class AttachController {
     
     @GetMapping("/download/{id}")
     public ResponseEntity<Object> fileDownload(@PathVariable("id") Long id){
-    	System.out.println("ci/cd test1");
+    	System.out.println("ci/cd test2");
     	try {
     		Attach fileData = attachService.selectAttachOne(id);
     		// 파일이 없다면 404 에러
