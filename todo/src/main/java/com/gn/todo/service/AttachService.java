@@ -96,7 +96,7 @@ public class AttachService {
 			String newName = uniqueName+fileExt;
 			dto.setNew_name(newName);
 			// 8. 파일 저장 경로 설정
-			String downDir = fileDir+newName;
+			String downDir = fileDir+"/"+newName;
 			dto.setAttach_path(downDir);
 			
 			// 9. 파일 껍데기 생성
