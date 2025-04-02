@@ -21,8 +21,22 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
+          script:  |
+            # 1. 작업 디렉토리로 이동
             cd /home/ubuntu/app/todo
-            ls -l
-            echo "Check GitHub Action Working"
-          
+            # 2. 최신 코드 가져오기
+            git pull origin master
+
+            # 3. 
+
+            # 4. jar파일 만들기
+            chmod +x ./gradlew
+            ./gradlew clean build -x test
+
+            # 5. 기존 컨테이너 내리기
+            sudo docker stop my-app || true
+            sudo docker rm my-app || true
+            sudo docker rmi my-app || true
+
+            # 6. jar 파일 복제 & 이미지 빌드 & 컨테이너 run
+            
