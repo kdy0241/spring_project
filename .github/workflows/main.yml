@@ -18,8 +18,8 @@ jobs:
       - name: In EC2 Work
         uses: appleboy/ssh-action@master
         with:
-          host:
-          username:
-          key:
-          script:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: 
           
