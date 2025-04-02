@@ -1,0 +1,25 @@
+name: Deploy to EC2
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'todo/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 저장소 소스코드 가져오기
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: In EC2 Work
+        uses: appleboy/ssh-action@master
+        with:
+          host:
+          username:
+          key:
+          script:
+          
