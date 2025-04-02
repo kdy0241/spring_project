@@ -32,7 +32,6 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/attach")
 public class AttachController {
 
     private final AttachService attachService;
@@ -64,7 +63,7 @@ public class AttachController {
     	}
     } 
 
-    @PostMapping("/create")
+    @PostMapping("/attach/create")
     @ResponseBody
     public Map<String, String> createAttachApi(@RequestParam("files") List<MultipartFile> files) {
         Map<String, String> resultMap = new HashMap<>();

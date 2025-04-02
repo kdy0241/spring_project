@@ -24,7 +24,7 @@
     			<!-- th:attr="data-attach-no=${attach.attachNo}"> -->
     			<td th:text="${attachStatus.count}">번호(Status의 count 사용)</td>
     			<td>
-    				<a th:onclick="|location.href='@{/attach/download/{id}(id=${attach.attachNo})}'|"
+    				<a th:onclick="|location.href='@{/download/{id}(id=${attach.attachNo})}'|"
     				    th:text="${attach.oriName}">
     					파일명
     				</a>
