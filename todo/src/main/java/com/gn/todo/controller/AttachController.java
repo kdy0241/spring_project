@@ -42,6 +42,7 @@ public class AttachController {
     	System.out.println("ci/cd test2");
     	try {
     		Attach fileData = attachService.selectAttachOne(id);
+    		System.out.println(fileData);
     		// 파일이 없다면 404 에러
     		if(fileData == null) {
     			return ResponseEntity.notFound().build();
